@@ -1,0 +1,231 @@
+---------------------------------------------------------------------
+                     TEMA 1 - Metode Numerice
+---------------------------------------------------------------------
+
+Autor: 
+  Smadu Razvan-Alexandru  315CB
+	
+Fisiere incluse:
+  - baza.m
+  - zigzag.m
+  - morse.m
+  - morse_decode.m
+  - morse_encode.m
+  - multiple_decode.m
+  - multiple_encode.m
+  - joc.m
+	
+README
+  Exercitiul 1
+      Pentru implementarea acestui exercitiu, au fost introduse functii
+    pentru realizarea operatiilor cu numere mari, reprezentate ca stringuri.
+    
+    Functia add(a, b) realizeaza adunarea dupa algoritmul folosit de noi
+    toti atunci cand o realizam pe hartie, si anume:
+      - se aduc numerele la acelasi numar de cifre
+      - pentru fiecare cifra:
+        - se aduna element cu element si eventual se aduna si transportul, daca
+      	  exista
+        - daca suma da un numar mai mare ca 9, atunci se realizeaza un transport
+      - daca exista transport la suma dintre ultimele cifre, acesta este pus pe 
+        pe pozitia urmatoare
+        
+    Functia mult(a, b) inmulteste 2 numere mari astfel:
+      - se inmulteste fiecare cifra din al doilea numar cu cele din primul
+        numar
+      - daca se depaseste cifra 9, atunci se calculeaza transportul si se aduna
+      	la urmatoarea cifra a rezultatului
+    
+    Functia pow(a, b) ridica numarul a la puterea b, prin inmultiri repetate.
+    
+    Functia sub(a, b) realizeaza scaderea a doua numere. Se scade element cu
+    element, iar daca nu se poate realiza aceasta operatie, se realizeaza un
+    transport. Aceasta functie poate realiza corect DOAR a - b, cu a > b.
+    
+    Functia divQR(a, b) realizeaza impartirea cu resta a lui b la a. Aceasta se 
+    bazeaza pe scaderi repetate.
+    
+    Functia cmp(a, b) compara numerele mari a si b. Rezultate intoarse:
+    	 1  daca a > b
+    	-1  daca b > a
+    	 0  daca a = b 
+    Algoritmul este urmatorul:
+      - daca a are mai multe cifre ca b atunci a > b
+      - daca b are mai multe cifre ca a atunci b > a
+      - daca cele 2 numere au acelasi numar de cifre atunci se compara cifra cu
+      	cifra pana cand una din ele este mai mare. In acest caz acel numar e mai
+      	mare.
+      	
+    De asemenea exita functia fixNum(a) care elimina 0-urile de la inceputul
+    numarului si functiile NumToVect(n) si VectToNum(n) care convertesc un
+    numar in vector de cifre si viceversa.
+    
+    Functia baza(string, b1, b2) converteste un numar mare, scris ca un
+    string, din baza b1 in baza b2. Algoritmul de conversie este urmatorul:
+      - se verifica daca se indeplinesc conditiile ca bazele sa fie in 
+        intervalul [2, 30].
+      - se convertesc bazele la numere mari (scrise ca string-uri).
+      - se converteste fiecare caracter din ASCII in numar si simultan
+      	se realizeaza conversia la baza 10:      			
+                         ___
+                         \         n-i
+                nr_10 =  /__ c * b1     , unde c  reprezinta cifrele numarului
+                          i   i                 i
+      
+      	NOTA: nr_10 este un numar mare.
+      - se realizeaza conversia din baza 10 in baza b2 prin impartiri repetate,
+        unde resturile obtinute reprezinta cifrele numarului in baza b2
+      - se rastoarna rezultatul (primul element devine ultimul si invers)
+      - se convertesc cifrele la caractere in cod ASCII
+      - se returneaza rezultatul
+      
+      Observatie: daca se introduc numere foarte mari, timpul de execute creste
+      cu cat numarul de cifre este mai mare.
+      
+      
+  Exercitiul 2
+    Generarea unei matrice zigzag se realizeaza astfel:
+    - se initializea un contor care genereaza valoarea elementelor matricei
+    - se parcurg liniile impare intr-un sens si liniile impare in sensul opus
+    - se asigneaza valoarea de contor si apoi se incrementeaza contorul
+    
+    Parcurgerea consta in:
+    1. generarea unei matrici inferior triunghilare
+    
+	   Ex: n = 3 (numerele reprezinta ordinea de parcurgere si nu elementele
+	   matricei generate)
+
+                          \ - diagonala principala 
+			  1   \      _________ j = 3 && i-j <= 3
+			  2   3   \  |
+			  6   5   4__| \
+			  7   8__|9  10   \
+			  15 |14 13  12  11 \
+    
+    2. daca indicii se afla in intervalul [1, n] atunci acel element se gaseste
+       si in matricea zigzag
+    3. parcurgerea fiecarei linii se face fie dreapta-stanga, fie stanga-dreapta
+    4. se transpun elementele din triunghiul inferior al matricii in diagonala
+       noii matrice
+                              _       _
+              1 2 6          |  0 1 5  |
+              3 5 7      =>  |  2 4 6  |
+              4 8 15         |_ 3 7 8 _|
+			  
+    
+     
+    Exercitiul 3
+         a) S-a continuat exemplul dat in cerinta, conform cu figura. Pentru 
+            utilizarea acestui arbore binar se apeleaza morse().
+
+	  b) Parcurgerea arborelui pentru determinarea literei se face astfel:
+	      - pentru fiecare litera din sirul de caractere
+		    - se verifica daca litera este . sau -
+			- daca este punct se trece pe ramura din stanga a arborelui
+			- daca este linie, se trece pe ramura din dreapta a arborelui
+		  - in final, daca nu s-a gasit litera, se intoarce *, altfel litera
+
+	  c) La acest exercitiu, am aplicat metoda Divide et Impera.
+	  Se cauta elementele pe fiecare ramura, pana se da de ea (recursiv)
+	  si se retine intr-un string rezultatul final si in alt string rezultatele
+	  partiale (din fiecare pas de cautare). Recursivitatea se termina atunci
+	  cand se ajunge la un element gol (fara litera si nod fiu).
+	  Apelul functiei DivEtImp() este urmatorul:
+
+	     [string_pentru_morse_partial string_partial rezultat_final] = 
+		 DivEtImp(cod_morse caracter_de_cautat string_partial rezultat_final);
+      
+          Intrucat recursivitatea se continua si dupa gasirea rezultatului, 
+	  acesta este retinut intr-o variabila separata de rezultatele finale, 
+	  intrucat, dupa terminarea recursivitatii, stringul partial va fi ----
+	  (ultima litera din arbore).
+
+	  d) Functia multiple_decode() aplica pentru fiecare litera morse_decode()
+	  si apoi se concateneaza fiecare rezultat partial in rezultatul final.
+	  In cazul in care se da o propozitie, cel mai bun separator de cuvinte
+	  este *, si nu spatiul, intrucat acesta va fi ignorat de strsplit().
+
+	  Functia multiple_encode() aplica functia de codificare morse_encode()
+	  pentru fiecare litera, si apoi le separa prin spatiu, pentru coerenta.
+	  La fel ca in cazul decodificarii, cel mai bun separator este *, dar 
+	  se poate folosi si spatiu, acesta fiind tratat ca un caracter invalid 
+	  pentru morse, deci va fi afisat * dupa codificare.
+	  
+    Exercitiul 4
+	  Corpul principal al jocului TIC TAC TOE este functia joc(). Pentru a 
+	  usura munca, am creat mai multe functii care sa imparta jocul in mai
+	  multe sarcini.
+
+      Functii create:
+            DisplayMenu() - afiseaza un titlu si niste informatii cum se joaca
+            chooseXO() - se decide cine este X si cine este O
+            InsertX() - functia de inserare pentru X in matricea B[oard];
+                        se apeleaza functia pentru CPU sau Player, in functie de 
+                        cine are de introdus urmatoarea miscare
+	    InsertO() - functia de inserare pentru O. Este similar InsertX()
+	    playerMove() - asteapta pentru input-ul jucatorului uman (pana cand se 
+	                   intruduce un caracter valid: 1-9 sau q/Q), si pune pe 
+	                   tabla de joc litera corespunzatoare utilizatorului
+            score() - utilizat pentru algoritmul minimax. Calculeaza scorul
+                      in functie de adancimea in care s-a ajuns in jocurile
+                      posibile.
+	    fixSpeed() - reduce viteza de "gandire" a calculatorului, intrucat
+                         pentru primele 2 mutari necesita foarte multe variante de joc,
+                         deci si un timp mare de executie (pana la 15 minute).
+                         Prin urmare s-au introdus niste mutari predefinite, pe care
+                         jucatorul CPU le-ar fi pus oricum, doar ca dupa un timp mai 
+                         indelungat.
+            switchPlayer() - schimba jucatorul curent: X => O si O => X
+            minimax() - este o implementare a algoritmului minimax.
+                        Acesta genereaza (recursiv) toate jocurile posibile si alege 
+                        varianta cea mai avantajoasa de a castiga (scorul sa fie cat 
+                        mai mic).
+            CpuMove() - functia prin care este implementata mutarea jucatorului CPU, 
+                        prin care este utilizat algoritmul minimax. Dupa ce se alege 
+			celula libera, se converteste in coordonate de joc si apoi 
+                        se plaseaza litera corespunzatoare (X sau O).
+                        pause(0.01) este folosit pentru a putea introduce Ctrl+C atunci
+                        cand, daca ar fi posibil, se intra intr-o bucla infinita, sau 
+                        mult prea lunga.
+
+            InitBoard() - creaza o matrice 3x3 cu elemente spatiu.
+            drawBoard() - deseneaza tabla de joc la stdout
+            dispStatistics() - afiseaza statistica
+            again() - asteapta raspuns de la utilizator daca doreste sa joace
+                      din nou o partida.
+            checkWin() - verifica daca se indeplinesc conditiile de victorie
+            gameOver() - testeaza daca s-a terminat jocul si actualizeaza statistica
+
+      Cum se joaca:
+	    Dupa ce se deschide jocul, prin introducerea '>> joc' in CLI se
+	    va afisa meniul de start, in care se asteapta alegerea jucatorului
+	    (X sau O). Se introduce alegerea si apoi se apasa ENTER. Orice
+	    alta alegere nu este acceptata. O sa apara apoi o tabla de joc
+	    3x3 prin care utilizatorul poate vedea mutarile. Daca el este primul
+	    atunci va trebui sa apese un numar 1-9 care va corespunde cu alegera 
+	    mutarii. Daca este O, atunci CPU o sa puna X in mijloc si se asteapta
+	    ca utilizatorul sa aleaga o mutare, alta fata de cea la CPU-ului.
+	    Daca mutare este invalida (altceva decat 1-9 sau mutarea deja exista)
+	    o sa se repete intruducerea cu o mutare valida. Se continua acest proces
+	    pana cand unul dintre jucatori castiga (realizeaza o linie de X sau O pe 
+	    verticala, orizontala sau diagonala) sau se termina egal. La final 
+	    jucatorul este intrebat daca mai doreste o partida de joc.
+
+	  NOTA: Prima mutare realizata prin algoritmul minimax dureaza mai mult, si
+	        anume:
+		      daca CPU este X - o sa dureze pana la 15-20 secunde
+		      daca CPU este O - o sa dureze pana la 5-10 secunde
+
+	  Scurta descriere a implementarii:
+	    Se initializeaza variabilele de start: daca jocul ruleaza, daca 
+	    este game over si statistica. Apoi se intra intr-o bucla in care
+	    se afiseaza meniul, se initializaza tabla de joc si se asteapta 
+	    alegerea. Apoi se intra in bucla principala care se repeta pana la 
+	    finalizarea partidei si in care se realizeaza etapele de introducere 
+	    mutare X, verificare daca X a castigat, verifica daca se doreste
+	    iesirea din joc. Apoi se introduce mutare jucatorului cu O, se verica
+	    daca O a castigat si se verifica daca se doreste iesirea din joc. 
+	    Ulterior, daca se atinge gameOver atunci se iese din bucla de partida,
+	    se afiseaza statistica si se asteapta raspuns daca se doreste
+	    inceperea unei noi partide.
+
